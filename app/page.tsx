@@ -19,7 +19,7 @@ export default function Home() {
         <div className="flex items-center">
           <DropdownMenu>
             <DropdownMenuTrigger className="group inline-flex text-sm font-medium text-gray-700 hover:text-gray-900">
-              Si donort
+              Sort
               <ChevronDown className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500" />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
