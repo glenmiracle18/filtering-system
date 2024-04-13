@@ -9,6 +9,10 @@ import {
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+import type { ProductTypes } from "@/lib/types";
+import Product from "@/components/Products/product";
 
 export default function Home() {
   const SORT_OPTIONS = [
@@ -23,7 +27,22 @@ export default function Home() {
     sort: "none",
   });
 
-  console.log(filter);
+  // quick data fetch demo
+  const { data: products } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const { data } = await axios.post<ProductTypes[]>(
+        "http://localhost:3000/api/products",
+        {
+          filter: {
+            sort: filter.sort,
+          },
+        },
+      );
+      return data;
+    },
+  });
+  console.log(products);
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
@@ -59,6 +78,19 @@ export default function Home() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+      </div>
+
+      <div className="pt-10 pb-24">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+          {/* filter grid */}
+          <div></div>
+          {/* product grid */}
+          <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {products?.map((product) => (
+              <Product product={product!} key={product.id} />
+            ))}
+          </ul>
         </div>
       </div>
     </main>

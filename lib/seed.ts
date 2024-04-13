@@ -32,6 +32,8 @@ const seed = async () => {
             } shirt ${i}`,
             size,
             price: getRandomPrice(),
+            createdAt: "no date",
+            updatedAt: "no date",
           });
         }
       }
@@ -60,8 +62,8 @@ const seed = async () => {
           name: product.name,
           imageId: product.imageId,
           price: product.price,
-          color: COLOR_MAP[product.color],
-          size: SIZE_MAP[product.size],
+          color: product.color,
+          size: product.size,
         },
         update: {},
       });
@@ -70,7 +72,6 @@ const seed = async () => {
     console.log("Successfull seeding");
   } catch (error) {
     console.log("Error while seeding");
-    console.log(error.message);
   } finally {
     database.$disconnect();
   }

@@ -1,14 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 
-export type ProductTypes = {
-  id: string;
-  imageId: string;
-  name: string;
-  size: "S" | "M" | "L";
-  color: "white" | "beige" | "blue" | "green" | "purple";
-  price: number;
-};
-
+// this just creates a new instance of prisma client
 declare global {
   var prisma: PrismaClient | undefined;
 }
