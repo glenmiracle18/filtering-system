@@ -13,6 +13,7 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import type { ProductTypes } from "@/lib/types";
 import Product from "@/components/Products/product";
+import ProductSkeleton from "@/components/Products/product-skeleton";
 
 export default function Home() {
   const SORT_OPTIONS = [
@@ -82,14 +83,18 @@ export default function Home() {
       </div>
 
       <div className="pt-10 pb-24">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
           {/* filter grid */}
           <div></div>
           {/* product grid */}
-          <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {products?.map((product) => (
-              <Product product={product!} key={product.id} />
-            ))}
+          <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+            {products
+              ? products.map((product) => (
+                  <Product product={product!} key={product.id} />
+                ))
+              : new Array(15)
+                  .fill(null)
+                  .map((_, i) => <ProductSkeleton key={i} />)}
           </ul>
         </div>
       </div>
