@@ -43,7 +43,7 @@ export default function Home() {
       return data;
     },
   });
-  console.log(products);
+  // console.log(products);
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
@@ -83,7 +83,7 @@ export default function Home() {
       </div>
 
       <div className="pt-10 pb-24">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
           {/* filter grid */}
           <div></div>
           {/* product grid */}
