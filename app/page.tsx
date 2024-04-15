@@ -14,6 +14,12 @@ import { useQuery } from "@tanstack/react-query";
 import type { ProductTypes } from "@/lib/types";
 import Product from "@/components/Products/product";
 import ProductSkeleton from "@/components/Products/product-skeleton";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 export default function Home() {
   const SORT_OPTIONS = [
@@ -22,6 +28,25 @@ export default function Home() {
     { name: "Price", value: "desc" },
   ] as const;
   // declaring it "as conts" will make it a constant and also prevent pushing into the array, like SORT_OPTIONS.PUSH({name: "new", value: "value"}
+
+  const SUB_CATEGORIES = [
+    { name: "T-shirts", selected: true, href: "#" },
+    { name: "Pants", selected: false, href: "#" },
+    { name: "Hoodies", selected: false, href: "#" },
+    { name: "Accesories", selected: false, href: "#" },
+  ] as const;
+
+  const COLOR_FILTER = {
+    id: "color",
+    name: "Color",
+    options: [
+      { value: "white", label: "White" },
+      { value: "biege", label: "Biege" },
+      { value: "blue", label: "Blue" },
+      { value: "green", label: "Green" },
+      { value: "purple", label: "Purple" },
+    ],
+  } as const;
 
   // state management for sorting
   const [filter, setFilter] = useState({
@@ -85,7 +110,50 @@ export default function Home() {
       <div className="pt-10 pb-24">
         <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
           {/* filter grid */}
-          <div></div>
+          <div className="hidden lg:block">
+            <ul className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
+              {SUB_CATEGORIES.map((category) => (
+                <li key={category.name}>
+                  <button
+                    disabled={!category.selected}
+                    className="disabled:cursor-not-allowed disabled:opacity-30"
+                  >
+                    {category.name}
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {/* accordion  */}
+            <Accordion type="multiple" className="animate-none">
+              {/* color filter */}
+              <AccordionItem value="color">
+                <AccordionTrigger className="font-medium text-gray-400 hover:text-gray-500">
+                  <span className="font-medium text-gray-900">Color</span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 animate-none">
+                  <ul className="space-y-4">
+                    {COLOR_FILTER.options.map((option, idx) => (
+                      <li key={option.value} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id={`color-${idx}`}
+                          className=" h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                        />
+                        <label
+                          htmlFor={`color-${idx}`}
+                          className="ml-3 text-sm text-gray-600"
+                        >
+                          {option.label}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
           {/* product grid */}
           <ul className="lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
             {products

@@ -1,4 +1,5 @@
 import { db } from "@/lib/db";
+import { NextResponse } from "next/server";
 
 // https verb is the name of the functions "POST".
 export const POST = async () => {
@@ -9,8 +10,8 @@ export const POST = async () => {
       },
       take: 15,
     });
-    return new Response(JSON.stringify(products));
+    return NextResponse.json(products);
   } catch (error) {
-    console.log("fetching products", error);
+    console.log("error while fetching products", error);
   }
 };

@@ -71,7 +71,7 @@ const seed = async () => {
 
     console.log("Successfull seeding");
   } catch (error) {
-    console.log("Error while seeding");
+    console.log(error);
   } finally {
     database.$disconnect();
   }
