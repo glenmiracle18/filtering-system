@@ -20,6 +20,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { ProductState } from "@/validators/product-validators";
 
 export default function Home() {
   const SORT_OPTIONS = [
@@ -36,6 +37,16 @@ export default function Home() {
     { name: "Accesories", selected: false, href: "#" },
   ] as const;
 
+  const SIZE_FILTER = {
+    id: "size",
+    name: "Size",
+    options: [
+      { value: "S", label: "S" },
+      { value: "M", label: "M" },
+      { value: "L", label: "L" },
+    ],
+  } as const;
+
   const COLOR_FILTER = {
     id: "color",
     name: "Color",
@@ -48,10 +59,17 @@ export default function Home() {
     ],
   } as const;
 
-  // state management for sorting
-  const [filter, setFilter] = useState({
+  const DEFAULT_CUSTOM_PRICE = [0, 100] as [number, number];
+
+  // state management for sorting, infered from productstate validated with zod
+  const [filter, setFilter] = useState<ProductState>({
     sort: "none",
+    color: ["white", "biege", "blue", "green", "purple"],
+    price: { isCustom: false, range: DEFAULT_CUSTOM_PRICE },
+    size: ["S", "L", "M"],
   });
+
+  console.log(filter);
 
   // quick data fetch demo
   const { data: products } = useQuery({
@@ -68,7 +86,29 @@ export default function Home() {
       return data;
     },
   });
-  // console.log(products);
+
+  const applyArrayFilter = ({
+    category,
+    value,
+  }: {
+    category: keyof Omit<typeof filter, "price" | "sort">;
+    value: string;
+  }) => {
+    // checks if the category in in the filter array
+    const isFilterApplied = filter[category].includes(value as never);
+
+    if (isFilterApplied) {
+      setFilter((prev) => ({
+        ...prev,
+        [category]: prev[category].filter((v) => v !== value),
+      }));
+    } else {
+      setFilter((prev) => ({
+        ...prev,
+        [category]: [...prev[category], value],
+      }));
+    }
+  };
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
@@ -137,11 +177,53 @@ export default function Home() {
                       <li key={option.value} className="flex items-center">
                         <input
                           type="checkbox"
+                          onChange={() => {
+                            applyArrayFilter({
+                              category: "color",
+                              value: option.value,
+                            });
+                          }}
+                          checked={filter.color.includes(option.value)}
                           id={`color-${idx}`}
-                          className=" h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                          className=" h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-blue-500"
                         />
                         <label
                           htmlFor={`color-${idx}`}
+                          className="ml-3 text-sm text-gray-600"
+                        >
+                          {option.label}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            {/* size filter */}
+            <Accordion type="multiple" className="animate-none">
+              <AccordionItem value="size">
+                <AccordionTrigger className="font-medium text-gray-400 hover:text-gray-500">
+                  <span className="font-medium text-gray-900">Size</span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 animate-none">
+                  <ul className="space-y-4">
+                    {SIZE_FILTER.options.map((option, idx) => (
+                      <li key={option.value} className="flex items-center">
+                        <input
+                          type="checkbox"
+                          onChange={() => {
+                            applyArrayFilter({
+                              category: "size",
+                              value: option.value,
+                            });
+                          }}
+                          checked={filter.size.includes(option.value)}
+                          id={`size-${idx}`}
+                          className=" h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-blue-500"
+                        />
+                        <label
+                          htmlFor={`size-${idx}`}
                           className="ml-3 text-sm text-gray-600"
                         >
                           {option.label}
