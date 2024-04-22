@@ -29,6 +29,7 @@ export default function Home() {
   ] as const;
   // declaring it "as conts" will make it a constant and also prevent pushing into the array, like SORT_OPTIONS.PUSH({name: "new", value: "value"}
 
+  // default constants for product sorting
   const SUB_CATEGORIES = [
     { name: "T-shirts", selected: true, href: "#" },
     { name: "Pants", selected: false, href: "#" },
@@ -43,6 +44,17 @@ export default function Home() {
       { value: "S", label: "S" },
       { value: "M", label: "M" },
       { value: "L", label: "L" },
+    ],
+  } as const;
+
+  const PRICE_FILTER = {
+    id: "price",
+    name: "Price",
+    options: [
+      { value: [0, 100], label: "Any Price" },
+      { value: [0, 40], label: "Under $40" },
+      { value: [0, 20], label: "Under $20" },
+      // custum defined and updated in jsx
     ],
   } as const;
 
@@ -69,6 +81,8 @@ export default function Home() {
     size: ["S", "L", "M"],
   });
 
+  console.log(filter);
+
   // quick data fetch demo using tanstack query
   const { data: products } = useQuery({
     queryKey: ["products"],
@@ -85,7 +99,7 @@ export default function Home() {
     },
   });
 
-  // general function to apply the filter function to the filter array
+  // general function to apply the filter function to only arrays (color, size) of the the filter array
   const applyArrayFilter = ({
     category,
     value,
@@ -130,12 +144,7 @@ export default function Home() {
                       "bg-gray-100 text-gray-900": option.value === filter.sort,
                       "text-gray-500": option.value !== filter.sort,
                     })}
-                    onClick={() =>
-                      setFilter((prev) => ({
-                        ...prev,
-                        sort: option.value,
-                      }))
-                    }
+                    // TODO: apply the onClick
                   >
                     {option.name}: {option.value}
                   </button>
@@ -223,6 +232,49 @@ export default function Home() {
                         />
                         <label
                           htmlFor={`size-${idx}`}
+                          className="ml-3 text-sm text-gray-600"
+                        >
+                          {option.label}
+                        </label>
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+
+            {/* price filter */}
+            <Accordion type="multiple" className="animate-none">
+              <AccordionItem value="price">
+                <AccordionTrigger className="font-medium text-gray-400 hover:text-gray-500">
+                  <span className="font-medium text-gray-900">Prize</span>
+                </AccordionTrigger>
+                <AccordionContent className="pt-4 animate-none">
+                  <ul className="space-y-4">
+                    {PRICE_FILTER.options.map((option, idx) => (
+                      <li key={option.label} className="flex items-center">
+                        <input
+                          type="radio"
+                          onChange={() => {
+                            setFilter((prev) => ({
+                              ...prev,
+                              price: {
+                                isCustom: false,
+                                range: [...option.value],
+                              },
+                            }));
+                          }}
+                          // this check status will only one item to be selected at a time.
+                          checked={
+                            !filter.price.isCustom &&
+                            filter.price.range[0] === option.value[0] &&
+                            filter.price.range[1] === option.value[1]
+                          }
+                          id={`price-${idx}`}
+                          className=" h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-blue-500"
+                        />
+                        <label
+                          htmlFor={`size-${idx}`} // taken from the input elemenent
                           className="ml-3 text-sm text-gray-600"
                         >
                           {option.label}
