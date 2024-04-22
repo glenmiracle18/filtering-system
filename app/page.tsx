@@ -20,6 +20,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { ProductState } from "@/validators/product-validators";
+import { Slider } from "@/components/ui/slider";
 
 export default function Home() {
   const SORT_OPTIONS = [
@@ -92,6 +93,9 @@ export default function Home() {
         {
           filter: {
             sort: filter.sort,
+            color: filter.color,
+            price: filter.price.range,
+            size: filter.size,
           },
         },
       );
@@ -122,6 +126,10 @@ export default function Home() {
       }));
     }
   };
+
+  // price ranges
+  const minPrice = Math.min(filter.price.range[0], filter.price.range[1]);
+  const maxPrice = Math.max(filter.price.range[0], filter.price.range[1]);
 
   return (
     <main className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
@@ -281,6 +289,75 @@ export default function Home() {
                         </label>
                       </li>
                     ))}
+
+                    {/* custom filter */}
+                    <li className="flex flex-col gap-2 justify-center">
+                      <div>
+                        <input
+                          type="radio"
+                          onChange={() => {
+                            setFilter((prev) => ({
+                              ...prev,
+                              price: {
+                                isCustom: true,
+                                range: [0, 100],
+                              },
+                            }));
+                          }}
+                          // this check status will only one item to be selected at a time.
+                          checked={filter.price.isCustom}
+                          id={`price-${PRICE_FILTER.options.length}`}
+                          className=" h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-blue-500"
+                        />
+                        <label
+                          htmlFor={`size-${PRICE_FILTER.options.length}`} // taken from the input elemenent
+                          className="ml-3 text-sm text-gray-600"
+                        >
+                          Custom
+                        </label>
+                      </div>
+
+                      <div className="flex justify-between">
+                        <p className="font-medium">Price</p>
+                        <div>
+                          {filter.price.isCustom
+                            ? minPrice.toFixed(0)
+                            : filter.price.range[0].toFixed(0)}{" "}
+                          $ -{" "}
+                          {filter.price.isCustom
+                            ? maxPrice.toFixed(0)
+                            : filter.price.range[1].toFixed(0)}{" "}
+                          $
+                        </div>
+                      </div>
+                      <Slider
+                        step={5}
+                        className={cn({
+                          "mt-4 flex justify-center items-center": true,
+                          "opacity-50": !filter.price.isCustom,
+                        })}
+                        disabled={!filter.price.isCustom}
+                        value={
+                          filter.price.isCustom
+                            ? filter.price.range
+                            : DEFAULT_CUSTOM_PRICE
+                        }
+                        min={DEFAULT_CUSTOM_PRICE[0]}
+                        max={DEFAULT_CUSTOM_PRICE[1]}
+                        defaultValue={DEFAULT_CUSTOM_PRICE}
+                        // manages slider movement funtionality
+                        onValueChange={(range) => {
+                          const [newMin, newMax] = range;
+                          setFilter((prev) => ({
+                            ...prev,
+                            price: {
+                              isCustom: true,
+                              range: [newMin, newMax],
+                            },
+                          }));
+                        }}
+                      />
+                    </li>
                   </ul>
                 </AccordionContent>
               </AccordionItem>
