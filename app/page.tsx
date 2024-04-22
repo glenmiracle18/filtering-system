@@ -3,7 +3,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
@@ -62,16 +61,15 @@ export default function Home() {
   const DEFAULT_CUSTOM_PRICE = [0, 100] as [number, number];
 
   // state management for sorting, infered from productstate validated with zod
+  // this is the default state of the filter, and can be mutated with several changes
   const [filter, setFilter] = useState<ProductState>({
     sort: "none",
     color: ["white", "biege", "blue", "green", "purple"],
-    price: { isCustom: false, range: DEFAULT_CUSTOM_PRICE },
+    price: { isCustom: false, range: DEFAULT_CUSTOM_PRICE }, // if the price is not custom set apply the default price range, which is from 1 to 100
     size: ["S", "L", "M"],
   });
 
-  console.log(filter);
-
-  // quick data fetch demo
+  // quick data fetch demo using tanstack query
   const { data: products } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -83,15 +81,16 @@ export default function Home() {
           },
         },
       );
-      return data;
+      return data; // this data value is the parsed to the parent above, which is renamed to producst
     },
   });
 
+  // general function to apply the filter function to the filter array
   const applyArrayFilter = ({
     category,
     value,
   }: {
-    category: keyof Omit<typeof filter, "price" | "sort">;
+    category: keyof Omit<typeof filter, "price" | "sort">; // property is expected to be one of the keys of the filter object, excluding the keys "price" and "sort".
     value: string;
   }) => {
     // checks if the category in in the filter array
