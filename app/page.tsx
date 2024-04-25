@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -84,8 +84,10 @@ export default function Home() {
 
   console.log(filter);
 
+  useEffect(() => {}, [filter]);
+
   // quick data fetch demo using tanstack query
-  const { data: products } = useQuery({
+  const { data: products, refetch } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
       const { data } = await axios.post<ProductTypes[]>(
@@ -102,6 +104,8 @@ export default function Home() {
       return data; // this data value is the parsed to the parent above, which is renamed to producst
     },
   });
+
+  const onSubmit = () => refetch();
 
   // general function to apply the filter function to only arrays (color, size) of the the filter array
   const applyArrayFilter = ({
@@ -125,6 +129,7 @@ export default function Home() {
         [category]: [...prev[category], value],
       }));
     }
+    onSubmit();
   };
 
   // price ranges
