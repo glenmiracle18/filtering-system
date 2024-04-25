@@ -1,7 +1,7 @@
 import { z } from "zod";
 const AVAILABLE_SIZES = ["S", "M", "L"] as const;
 const AVAILABLE_COLORS = ["blue", "white", "green", "biege", "purple"] as const;
-const AVAILABLE_SORT = ["none", "price-asc", "price_desc"] as const;
+const AVAILABLE_SORT = ["none", "asc", "desc"] as const;
 
 // using zod to validate the product filter types for safety
 export const productFilterValidator = z.object({
@@ -12,6 +12,8 @@ export const productFilterValidator = z.object({
 });
 
 export type ProductState = Omit<
-  z.infer<typeof productFilterValidator>,"price"> & {
+  z.infer<typeof productFilterValidator>,
+  "price"
+> & {
   price: { isCustom: boolean; range: [number, number] };
 };

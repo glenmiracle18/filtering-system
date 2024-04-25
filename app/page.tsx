@@ -160,7 +160,13 @@ export default function Home() {
                       "bg-gray-100 text-gray-900": option.value === filter.sort,
                       "text-gray-500": option.value !== filter.sort,
                     })}
-                    // TODO: apply the onClick
+                    onClick={() => {
+                      setFilter((prev) => ({
+                        ...prev,
+                        sort: option.value,
+                      }));
+                      _debounceSubmit();
+                    }}
                   >
                     {option.name}: {option.value}
                   </button>
