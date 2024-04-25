@@ -1,13 +1,13 @@
 <div align='center'>
 
-<img src=/public/demo.jpeg alt="logo" width= height= />
+
 
 <h1>Advanced / Production grade ecommerce filtering system</h1>
 <p>This is a detailed and fine-tuned E-commerce filtering system that filters right down to on of the smallest variables possible. </p>
 
 <h4> <span> · </span> <a href="https://github.com/glenmiracle18/filtering-system/blob/master/README.md"> Documentation </a> <span> · </span> <a href="https://github.com/glenmiracle18/filtering-system/issues"> Report Bug </a> <span> · </span> <a href="https://github.com/glenmiracle18/filtering-system/issues"> Request Feature </a> </h4>
 
-
+<img src=/demo.jpeg alt="logo">
 </div>
 
 # :notebook_with_decorative_cover: Table of Contents
