@@ -87,8 +87,9 @@ export default function Home() {
   const { data: products, refetch } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
+      // https://filtering-system-five.vercel.app/
       const { data } = await axios.post<ProductTypes[]>(
-        "http://localhost:3000/api/products",
+        "https://filtering-system-five.vercel.app/products",
         {
           filter: {
             sort: filter.sort,
