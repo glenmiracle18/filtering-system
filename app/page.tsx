@@ -6,7 +6,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/accordion";
 import { ProductState } from "@/validators/product-validators";
 import { Slider } from "@/components/ui/slider";
+import debounce from "lodash.debounce";
 
 export default function Home() {
   const SORT_OPTIONS = [
@@ -84,8 +85,6 @@ export default function Home() {
 
   console.log(filter);
 
-  useEffect(() => {}, [filter]);
-
   // quick data fetch demo using tanstack query
   const { data: products, refetch } = useQuery({
     queryKey: ["products"],
@@ -106,6 +105,10 @@ export default function Home() {
   });
 
   const onSubmit = () => refetch();
+
+  // debouncing
+  const debounceSubmit = debounce(onSubmit, 400);
+  const _debounceSubmit = useCallback(debounceSubmit, []);
 
   // general function to apply the filter function to only arrays (color, size) of the the filter array
   const applyArrayFilter = ({
@@ -129,7 +132,7 @@ export default function Home() {
         [category]: [...prev[category], value],
       }));
     }
-    onSubmit();
+    _debounceSubmit();
   };
 
   // price ranges
@@ -360,6 +363,7 @@ export default function Home() {
                               range: [newMin, newMax],
                             },
                           }));
+                          debounceSubmit();
                         }}
                       />
                     </li>
