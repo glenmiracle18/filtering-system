@@ -1,10 +1,8 @@
 import { db } from "@/lib/db";
 import { productFilterValidator } from "@/validators/product-validators";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-type SortOption = "asc" | "desc";
-
-export const POST = async (req: NextResponse) => {
+export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
 
@@ -12,7 +10,7 @@ export const POST = async (req: NextResponse) => {
       body.filter,
     );
 
-    const orderByOptions: Record<SortOption, { [key: string]: string }> = {
+    const orderByOptions: Record<string, { [key: string]: string }> = {
       asc: { price: "asc" },
       desc: { price: "desc" },
     };
