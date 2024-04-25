@@ -23,6 +23,7 @@ const seed = async () => {
         for (let k = 0; k < SIZES.length; k++) {
           const size = SIZES[k];
           const color = COLORS[j];
+          const currentDate = new Date(); // date object for createdAt and updatedAt
           products.push({
             id: `${color}-${size}-${i + 1}`,
             imageId: `/${color}_${i + 1}.png`,
@@ -32,8 +33,8 @@ const seed = async () => {
             } shirt ${i}`,
             size,
             price: getRandomPrice(),
-            createdAt: new Date(),
-            updatedAt: new Date(),
+            createdAt: currentDate,
+            updatedAt: currentDate,
           });
         }
       }
