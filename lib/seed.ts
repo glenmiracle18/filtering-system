@@ -32,8 +32,8 @@ const seed = async () => {
             } shirt ${i}`,
             size,
             price: getRandomPrice(),
-            createdAt: "no date",
-            updatedAt: "no date",
+            createdAt: new Date(),
+            updatedAt: new Date(),
           });
         }
       }
