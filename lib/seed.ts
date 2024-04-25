@@ -40,6 +40,8 @@ const seed = async () => {
       }
     }
 
+    // stay cool
+
     const SIZE_MAP = {
       S: 0,
       M: 1,
