@@ -87,18 +87,15 @@ export default function Home() {
   const { data: products, refetch } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      // https://filtering-system-five.vercel.app/
-      const { data } = await axios.post<ProductTypes[]>(
-        "https://filtering-system-five.vercel.app/products",
-        {
-          filter: {
-            sort: filter.sort,
-            color: filter.color,
-            price: filter.price.range,
-            size: filter.size,
-          },
+      // just changed from local to dev environment (url)
+      const { data } = await axios.post<ProductTypes[]>("/api/products", {
+        filter: {
+          sort: filter.sort,
+          color: filter.color,
+          price: filter.price.range,
+          size: filter.size,
         },
-      );
+      });
       return data; // this data value is the parsed to the parent above, which is renamed to producst
     },
   });
